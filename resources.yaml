@@ -1,0 +1,34 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: private-chat
+spec:
+  type: LoadBalancer
+  selector:
+    app: private-chat
+  ports:
+    - port: 80
+      targetPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: private-chat
+  labels:
+    app: private-chat
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: private-chat
+  template:
+    metadata:
+      labels:
+        app: private-chat
+    spec:
+      containers:
+        - name: private-chat
+          image: us-central1-docker.pkg.dev/GOOGLE_PROJECT/my-repository/private-chat:latest
+          ports:
+            - containerPort: 8080
